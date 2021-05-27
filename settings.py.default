@@ -1,0 +1,9 @@
+GROUP_ID = 204760990
+TOKEN = ''
+
+DB_CONFIG = dict(
+    provider='postgres',
+    user='postgres',
+    host='localhost',
+    database='vk_chat_bot'
+)
