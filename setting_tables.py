@@ -1,8 +1,8 @@
 from models import Product, Category, UserState
 import peewee
 
-Product.create_table()
-Category.create_table()
+# Product.create_table()
+# Category.create_table()
 UserState.create_table()
 
 
@@ -35,8 +35,8 @@ def add_product(name, description, category_name):
 categories_and_products = {'мороженое': [{'эскимо': ''}, {'стаканчик': ''}], 'напитки': [{'кола': ''}, {'спрайт': ''}],
                            'выпечка': [{'булка': ''}, {'пицца': ''}, {'круассан': ''}],
                            'сладости': [{'конфеты': ''}, {'мармелад': ''}]}
-for category, products in categories_and_products.items():
-    add_category(category)
-    for item in products:
-        for product, description in item.items():
-            add_product(product, description, category)
+# for category, products in categories_and_products.items():
+#     add_category(category)
+#     for item in products:
+#         for product, description in item.items():
+#             add_product(product, description, category)

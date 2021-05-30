@@ -13,6 +13,24 @@ def handler_category(text):
 
 def handle_first_keyboard(text):
     keyboard = VkKeyboard()
+
+    keyboard.add_button('Мороженое', color=VkKeyboardColor.SECONDARY)
+    keyboard.add_button('Напитки', color=VkKeyboardColor.NEGATIVE)
+
+    keyboard.add_line()
+
+    keyboard.add_button('Выпечка', color=VkKeyboardColor.POSITIVE)
+    keyboard.add_button('Сладости', color=VkKeyboardColor.PRIMARY)
+
+    keyboard.add_line()
+
+    keyboard.add_button('Вернуться на главную', color=VkKeyboardColor.SECONDARY)
+
+    return keyboard
+
+
+def handle_second_keyboard(text):
+    keyboard = VkKeyboard()
     try:
         query = Category.get(Category.name == text.lower())
     except models.Category.DoesNotExist:
@@ -26,7 +44,7 @@ def handle_first_keyboard(text):
     return keyboard
 
 
-def handle_second_keyboard(text):
+def handle_third_keyboard(text):
     try:
         query = Product.get(Product.name == text.lower())
     except models.Product.DoesNotExist:

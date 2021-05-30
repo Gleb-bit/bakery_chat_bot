@@ -26,29 +26,30 @@ INTENTS = [
     },
 ]
 SCENARIOS = {
-    'start_scenario': {
-        'first_step': 1,
-        'steps': {
-            1: {
-                'text': 'Хорошо, давайте начнём. Пожалуйста, выберите категорию, о которой хотели бы узнать',
-                'failure_text': 'К сожалению, такой категории нет',
-                'handler': None,
-                'next_step': 2,
-            },
-            2: {
-                'text': 'Выберите продукт',
-                'failure_text': 'К сожалению, данного продукта нет',
-                'handler': 'handle_first_keyboard',
-                'next_step': 3,
-            },
-            3: {
-                'text': 'Вот описание и фото выбранного продукта:',
-                'failure_text': 'Вы ввели неправильную дату, либо на данную дату нет ни одного рейса',
-                'image': True,
-                'handler': 'handle_second_keyboard',
-                'next_step': None
-            }
+    'first_step': 1,
+    'steps': {
+        1: {
+            'text': 'Хорошо, давайте начнём. Пожалуйста, выберите категорию, о которой хотели бы узнать',
+            'failure_text': 'К сожалению, такой категории нет',
+            'handler': 'handle_first_keyboard',
+            'next_step': 2,
+        },
+        2: {
+            'text': 'Выберите продукт',
+            'failure_text': 'К сожалению, данного продукта нет',
+            'handler': 'handle_second_keyboard',
+            'next_step': 3,
+        },
+        3: {
+            'text': 'Вот описание и фото выбранного продукта:',
+            'failure_text': 'Вы ввели неправильную дату, либо на данную дату нет ни одного рейса',
+            'image': True,
+            'handler': 'handle_third_keyboard',
+            'next_step': None
         }
     }
 }
+
+BACK_ANSWER = 'Хорошо, вернёмся на страницу назад'
+BACK_TO_MAIN_ANSWER = 'Хорошо, вернёмся на главную'
 DEFAULT_ANSWER = 'Простите, не понял вас. я бот для заказа выпечки. Могу помочь вам выбрать товар'

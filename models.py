@@ -41,6 +41,6 @@ class Product(BaseModel):
 class UserState(BaseModel):
     """user state inside scenario"""
     user_id = CharField(max_length=100)
-    scenario_name = CharField(max_length=100)
+    text = TextField()
     step_name = CharField(max_length=10)
     keyboard = TextField()

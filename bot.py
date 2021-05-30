@@ -17,7 +17,6 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 
-
 class Bot:
     """
     Echo bot for vk.com
@@ -35,7 +34,6 @@ class Bot:
         self.vk = vk_api.VkApi(token=token)  # объект vk_api для longpoll
         self.long_poller = VkBotLongPoll(self.vk, self.group_id)  # создание longpoll
         self.api = self.vk.get_api()
-        self.keyboard = self.take_keyboard()
 
     def run(self):
         """Запуск бота."""
@@ -43,7 +41,7 @@ class Bot:
             try:
                 self.on_event(event)
             except Exception as exc:
-                print(exc)
+                print(exc, type(exc), exc.args)
 
     def on_event(self, event):
         """
@@ -65,7 +63,7 @@ class Bot:
                     if intent['answer']:
                         self.send_text(intent['answer'], user_id)
                     else:
-                        self.start_scenario(user_id, intent['scenario'])
+                        self.start_scenario(user_id)
                     break
             else:
                 self.send_text(settings.DEFAULT_ANSWER, user_id)
@@ -108,20 +106,19 @@ class Bot:
         if 'image' in step:
             self.send_image(reply, user_id)
 
-    def start_scenario(self, user_id, scenario_name):
-        scenario = settings.SCENARIOS[scenario_name]
-        first_step = scenario['first_step']
-        step = scenario['steps'][first_step]
-        self.send_text(step['text'], user_id, keyboard=self.keyboard)
-        state = UserState(user_id=str(user_id), scenario_name=scenario_name, step_name=step['next_step'],
-                          keyboard=self.keyboard)
+    def start_scenario(self, user_id, text=''):
+        first_step = settings.SCENARIOS['first_step']
+        step = settings.SCENARIOS['steps'][first_step]
+        keyboard = self.get_reply(text=text, step=step)
+        self.send_text(step['text'], user_id, keyboard=keyboard)
+        state = UserState(user_id=str(user_id), text=text, step_name=step['next_step'],
+                          keyboard=keyboard)
         state.save()
 
     def continue_scenario(self, text, state, user_id):
-        steps = settings.SCENARIOS[state.scenario_name]['steps']
+        steps = settings.SCENARIOS['steps']
         step = steps[int(state.step_name)]
-        handler = getattr(handlers, step['handler'])
-        reply = handler(text=text)
+        reply = self.get_reply(text=text, step=step)
         if reply:
             # next_step
             self.send_step(step, user_id, reply)
@@ -129,6 +126,7 @@ class Bot:
             if step['next_step']:
                 # switch to next step
                 state.step_name = step['next_step']
+                state.text = text
                 if isinstance(reply, VkKeyboard):
                     state.keyboard = reply
                 state.save()
@@ -146,29 +144,21 @@ class Bot:
         text_to_send = None
         if text == 'Вернуться на главную':
             state.step_name = 2
-            state.keyboard = self.keyboard
-            text_to_send = 'Хорошо, вернёмся на главную'
+            state.keyboard = self.get_reply(state.text)
+            text_to_send = settings.BACK_TO_MAIN_ANSWER
         elif text == 'Назад':
-            pass
+            state.step_name = int(state.step_name) - 2
+            steps = settings.SCENARIOS['steps']
+            step = steps[state.step_name]
+            state.keyboard = self.get_reply(text=state.text, step=step)
+            text_to_send = settings.BACK_ANSWER
         state.save()
         return text_to_send
 
-    def take_keyboard(self):
-        keyboard = VkKeyboard()
-
-        keyboard.add_button('Мороженое', color=VkKeyboardColor.SECONDARY)
-        keyboard.add_button('Напитки', color=VkKeyboardColor.NEGATIVE)
-
-        keyboard.add_line()
-
-        keyboard.add_button('Выпечка', color=VkKeyboardColor.POSITIVE)
-        keyboard.add_button('Сладости', color=VkKeyboardColor.PRIMARY)
-
-        keyboard.add_line()
-
-        keyboard.add_button('Вернуться на главную', color=VkKeyboardColor.SECONDARY)
-
-        return keyboard
+    def get_reply(self, text, step=None):
+        handler = getattr(handlers, step['handler'] if step else 'handle_first_keyboard')
+        reply = handler(text=text)
+        return reply
 
 
 if __name__ == "__main__":
