@@ -13,17 +13,21 @@ def handler_category(text):
 
 def handle_first_keyboard(text):
     keyboard = VkKeyboard()
-
-    keyboard.add_button('Мороженое', color=VkKeyboardColor.SECONDARY)
-    keyboard.add_button('Напитки', color=VkKeyboardColor.NEGATIVE)
-
-    keyboard.add_line()
-
-    keyboard.add_button('Выпечка', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_button('Сладости', color=VkKeyboardColor.PRIMARY)
-
-    keyboard.add_line()
-
+    categories = Category.select()
+    for category in categories:
+        keyboard.add_button(category.name, color=VkKeyboardColor.SECONDARY)
+        if not category.id % 2:
+            keyboard.add_line()
+    # keyboard.add_button('Мороженое', color=VkKeyboardColor.SECONDARY)
+    # keyboard.add_button('Напитки', color=VkKeyboardColor.NEGATIVE)
+    #
+    # keyboard.add_line()
+    #
+    # keyboard.add_button('Выпечка', color=VkKeyboardColor.POSITIVE)
+    # keyboard.add_button('Сладости', color=VkKeyboardColor.PRIMARY)
+    #
+    # keyboard.add_line()
+    #
     keyboard.add_button('Вернуться на главную', color=VkKeyboardColor.SECONDARY)
 
     return keyboard
