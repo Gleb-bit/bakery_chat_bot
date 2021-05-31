@@ -1,8 +1,6 @@
-import datetime, psycopg2
+import datetime
 
 from peewee import *
-from pony.orm import Database, Json, Required
-from playhouse.mysql_ext import MySQLConnectorDatabase, JSONField
 from settings import DB_CONFIG
 
 db_handle = SqliteDatabase('postgres')
@@ -20,9 +18,6 @@ class Category(BaseModel):
     created_at = DateTimeField(default=datetime.datetime.now())
     updated_at = DateTimeField(default=datetime.datetime.now())
 
-    # class Meta:
-    #     db_table = 'categories'
-
 
 class Product(BaseModel):
     id = PrimaryKeyField(null=False)
@@ -34,8 +29,6 @@ class Product(BaseModel):
     created_at = DateTimeField(default=datetime.datetime.now())
     updated_at = DateTimeField(default=datetime.datetime.now())
 
-    # class Meta:
-    #     db_table = 'categories'
 
 
 class UserState(BaseModel):
