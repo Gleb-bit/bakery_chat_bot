@@ -37,11 +37,8 @@ class Bot:
 
     def run(self):
         """Запуск бота."""
-        for event in self.long_poller.listen():  # принимаем события
-            try:
-                self.on_event(event)
-            except Exception as exc:
-                print(exc, type(exc), exc.args)
+        for event in self.long_poller.listen():
+            self.on_event(event)
 
     def on_event(self, event):
         """
@@ -147,9 +144,9 @@ class Bot:
             state.keyboard = self.get_reply(state.text)
             text_to_send = settings.BACK_TO_MAIN_ANSWER
         elif text == 'Назад':
-            state.step_name = int(state.step_name) - 2
+            state.step_name = int(state.step_name) - 1
             steps = settings.SCENARIOS['steps']
-            step = steps[state.step_name]
+            step = steps[state.step_name - 1]
             state.keyboard = self.get_reply(text=state.text, step=step)
             text_to_send = settings.BACK_ANSWER
         state.save()
