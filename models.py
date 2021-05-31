@@ -1,7 +1,6 @@
-import datetime, psycopg2
+import datetime
 
 from peewee import *
-from pony.orm import Database, Json, Required
 from settings import DB_CONFIG
 
 db_handle = SqliteDatabase('postgres')
