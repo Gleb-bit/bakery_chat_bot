@@ -1,0 +1,9 @@
+version: '3.3'
+
+services:
+  bot:
+    image: chat_bot_vk:latest
+    restart: always
+    command: python bot.py
+    volumes:
+      - .:/app
